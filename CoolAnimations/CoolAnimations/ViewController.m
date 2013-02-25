@@ -41,42 +41,34 @@
   CALayer *layer = _button.layer;
   __block CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
   rotationAndPerspectiveTransform.m34 = 1.0 / -500;
-  rotationAndPerspectiveTransform = CATransform3DRotate(rotationAndPerspectiveTransform, 45.0f * M_PI / 180.0f, 1.0f, 1.0f, 0.0f);
+  rotationAndPerspectiveTransform = CATransform3DRotate(rotationAndPerspectiveTransform, 4*45.0f * M_PI / 180.0f, 2.0f, 1.0f, 0.0f);
   
   CABasicAnimation *transformAnimation = [CABasicAnimation animationWithKeyPath: @"transform"];
   
 //  layer.transform = rotationAndPerspectiveTransform;
   
   transformAnimation.toValue = [NSValue valueWithCATransform3D:rotationAndPerspectiveTransform];
-  transformAnimation.duration = 0.2;
+  transformAnimation.duration = 1.0;
 //  [transformAnimation setRepeatCount:INFINITY];
   [transformAnimation setDelegate:self];
   [transformAnimation setAutoreverses:NO];
   [transformAnimation setFillMode:kCAFillModeForwards];
   [transformAnimation setRemovedOnCompletion:NO];
   [layer addAnimation:transformAnimation forKey:@"transform"];
-  
-//  [UIView animateWithDuration:0.1f
-//                        delay:0.0f
-//                      options:UIViewAnimationOptionCurveLinear
-//                   animations:^{
-//                     layer.transform = rotationAndPerspectiveTransform;
-//                   } completion:^(BOOL finished) {
-//                     [UIView animateWithDuration:0.1f
-//                                           delay:0.0f
-//                                         options:UIViewAnimationOptionCurveLinear
-//                                      animations:^{
-//                                        rotationAndPerspectiveTransform = CATransform3DRotate(rotationAndPerspectiveTransform, 45.0f * M_PI / 180.0f, 1.0f, 1.0f, 0.0f);
-//                                        layer.transform = rotationAndPerspectiveTransform;
-//                                      } completion:^(BOOL finished) {
-//                                      }];
-//                   }];
 }
 
 - (void)didReceiveMemoryWarning
 {
   [super didReceiveMemoryWarning];
   // Dispose of any resources that can be recreated.
+}
+
+- (void)startAnimationWithDegree:(CGFloat)degree keyPath:(NSString*)keyPath{
+  
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+  
 }
 
 @end

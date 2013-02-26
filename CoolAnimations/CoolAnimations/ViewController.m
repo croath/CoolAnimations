@@ -9,19 +9,7 @@
 #import "ViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
-//CATransform3D CATransform3DMakePerspective(CGPoint center, float disZ)
-//{
-//  CATransform3D transToCenter = CATransform3DMakeTranslation(-center.x, -center.y, 0);
-//  CATransform3D transBack = CATransform3DMakeTranslation(center.x, center.y, 0);
-//  CATransform3D scale = CATransform3DIdentity;
-//  scale.m34 = -1.0f/disZ;
-//  return CATransform3DConcat(CATransform3DConcat(transToCenter, scale), transBack);
-//}
-//
-//CATransform3D CATransform3DPerspect(CATransform3D t, CGPoint center, float disZ)
-//{
-//  return CATransform3DConcat(t, CATransform3DMakePerspective(center, disZ));
-//}
+static const float time_1 = 0.5f;
 
 @interface ViewController ()
 
@@ -37,24 +25,23 @@
 
 - (void)viewDidAppear:(BOOL)animated{
   [super viewDidAppear:animated];
-  
   CALayer *layer = _button.layer;
-  __block CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
-  rotationAndPerspectiveTransform.m34 = 1.0 / -500;
+  CALayer *layer2 = _button2.layer;
+  CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
+  rotationAndPerspectiveTransform.m34 = 1.0 / -100;
   rotationAndPerspectiveTransform = CATransform3DRotate(rotationAndPerspectiveTransform, 4*45.0f * M_PI / 180.0f, 2.0f, 1.0f, 0.0f);
   
-  CABasicAnimation *transformAnimation = [CABasicAnimation animationWithKeyPath: @"transform"];
-  
-//  layer.transform = rotationAndPerspectiveTransform;
+  CABasicAnimation *transformAnimation = [CABasicAnimation animation];
+  [transformAnimation setValue:@"anim1" forKey:@"id"];
   
   transformAnimation.toValue = [NSValue valueWithCATransform3D:rotationAndPerspectiveTransform];
-  transformAnimation.duration = 1.0;
-//  [transformAnimation setRepeatCount:INFINITY];
+  transformAnimation.duration = time_1/2.0;
   [transformAnimation setDelegate:self];
   [transformAnimation setAutoreverses:NO];
   [transformAnimation setFillMode:kCAFillModeForwards];
   [transformAnimation setRemovedOnCompletion:NO];
   [layer addAnimation:transformAnimation forKey:@"transform"];
+  [layer2 addAnimation:transformAnimation forKey:@"transform"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,11 +50,44 @@
   // Dispose of any resources that can be recreated.
 }
 
-- (void)startAnimationWithDegree:(CGFloat)degree keyPath:(NSString*)keyPath{
-  
-}
-
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+  NSString *v = [anim valueForKey:@"id"];
+  CALayer *layer = _button.layer;
+  CALayer *layer2 = _button2.layer;
+  
+  if ([v isEqualToString:@"anim1"]) {
+    CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
+    rotationAndPerspectiveTransform.m34 = 1.0 / -100;
+    rotationAndPerspectiveTransform = CATransform3DRotate(rotationAndPerspectiveTransform, 2*45.0f * M_PI / 180.0f, 2.0f, 1.0f, 0.0f);
+    
+    CABasicAnimation *transformAnimation = [CABasicAnimation animation];
+    [transformAnimation setValue:@"anim2" forKey:@"id"];
+    transformAnimation.fromValue = ((CABasicAnimation*)anim).toValue;
+    transformAnimation.toValue = [NSValue valueWithCATransform3D:rotationAndPerspectiveTransform];
+    transformAnimation.duration = time_1/4;
+    [transformAnimation setDelegate:self];
+    [transformAnimation setAutoreverses:NO];
+    [transformAnimation setFillMode:kCAFillModeForwards];
+    [transformAnimation setRemovedOnCompletion:NO];
+    [layer addAnimation:transformAnimation forKey:@"transform"];
+    [layer2 addAnimation:transformAnimation forKey:@"transform"];
+  } else if ([v isEqualToString:@"anim2"]){
+    CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
+    rotationAndPerspectiveTransform.m34 = 1.0 / -100;
+    rotationAndPerspectiveTransform = CATransform3DRotate(rotationAndPerspectiveTransform, 0*45.0f * M_PI / 180.0f, 2.0f, 1.0f, 0.0f);
+    
+    CABasicAnimation *transformAnimation = [CABasicAnimation animation];
+    [transformAnimation setValue:@"anim3" forKey:@"id"];
+    transformAnimation.fromValue = ((CABasicAnimation*)anim).toValue;
+    transformAnimation.toValue = [NSValue valueWithCATransform3D:rotationAndPerspectiveTransform];
+    transformAnimation.duration = time_1/4;
+    [transformAnimation setDelegate:self];
+    [transformAnimation setAutoreverses:NO];
+    [transformAnimation setFillMode:kCAFillModeForwards];
+    [transformAnimation setRemovedOnCompletion:NO];
+    [layer addAnimation:transformAnimation forKey:@"transform"];
+    [layer2 addAnimation:transformAnimation forKey:@"transform"];
+  }
   
 }
 
